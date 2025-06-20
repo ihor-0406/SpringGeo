@@ -1,17 +1,35 @@
+let currentCity = "";
+
 $(document).ready(function(){
     loadPages();
     loadData(0);
+
+    $("#searchBtn").click(function () {
+        currentCity = $("#cityInput").val().trim();
+        $("#pages").empty();
+        loadPages();
+        loadData(0);
+    });
+
+    $("#clearBtn").click(function () {
+        $("#cityInput").val('');
+        currentCity = "";
+        $("#pages").empty();
+        loadPages();
+        loadData(0);
+    });
 });
 
 function loadPages() {
-    $.getJSON('/admin/count', function(data) {
-        var pageCount = (data.count / data.pageSize) + (data.count % data.pageSize > 0 ? 1 : 0);
-        var i;
+    $.getJSON('/admin/count?city=' + encodeURIComponent(currentCity), function(data) {
+        let pageCount = (data.count / data.pageSize) +
+            (data.count % data.pageSize > 0 ? 1 : 0);
 
-        for (i = 1; i <= pageCount; i++) {
+        for (let i = 1; i <= pageCount; i++) {
             $('#pages').append(
                 $('<li>').attr('class', 'page-item').append(
-                    $('<a>').attr('class', 'page-link').attr('id', i - 1).append('Page ' + i))
+                    $('<a>').attr('class', 'page-link').attr('id', i - 1)
+                        .append('Page ' + i))
             );
         }
     });
@@ -24,10 +42,8 @@ function loadPages() {
 function loadData(page) {
     $("#data > tbody").empty();
 
-    $.getJSON('/admin/geo?page=' + page, function(data) {
-        var i;
-
-        for (i = 0; i < data.length; i++) {
+    $.getJSON('/admin/geo?page=' + page + '&city=' + encodeURIComponent(currentCity), function(data) {
+        for (let i = 0; i < data.length; i++) {
             $('#data > tbody:last-child').append(
                 $('<tr>')
                     .append($('<td>').append(data[i].ip))

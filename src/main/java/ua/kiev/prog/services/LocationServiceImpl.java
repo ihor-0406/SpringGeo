@@ -1,5 +1,6 @@
 package ua.kiev.prog.services;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +28,17 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<LocationDTO> getLocations(Pageable pageable) {
-        List<Location> list = locationRepository.findAll(pageable).getContent();
+    public List<LocationDTO> getLocations(String city,Pageable pageable) {
+//        List<Location> list = locationRepository.findByCity(city, pageable).getContent();
+
+        List<Location> list;
+
+        if(city == null || city.isBlank()){
+            list = locationRepository.findAll(pageable).getContent();
+        }else {
+            list = locationRepository.findByCity(city, pageable).getContent();
+        }
+
         List<LocationDTO> res = new ArrayList<>();
 
         for (Location loc : list)
@@ -39,7 +49,10 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional(readOnly = true)
-    public long count() {
-        return locationRepository.count();
+    public long count(String city) {
+        return locationRepository.countByCity(city);
     }
+
+//    -------------------------------------------------
+
 }

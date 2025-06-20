@@ -3,6 +3,8 @@ package ua.kiev.prog.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// DB -> E -> R -> S -> |DTO| -> C -> JSON/View
+
 @Data
 @NoArgsConstructor
 public class LocationDTO {
@@ -21,4 +23,5 @@ public class LocationDTO {
     public static LocationDTO of(String ip, String city, String region, String country) {
         return new LocationDTO(ip, city, region, country);
     }
+
 }

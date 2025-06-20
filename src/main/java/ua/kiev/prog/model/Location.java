@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ua.kiev.prog.dto.LocationDTO;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 @Data
 @NoArgsConstructor
@@ -26,6 +26,7 @@ public class Location {
         this.city = city;
         this.region = region;
         this.country = country;
+
     }
 
     public static Location of(String ip, String city, String region, String country) {

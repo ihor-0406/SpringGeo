@@ -23,13 +23,39 @@ public class AdminController {
         this.locationService = locationService;
     }
 
-    @GetMapping("count")
-    public PageCountDTO count() {
-        return PageCountDTO.of(locationService.count(), PAGE_SIZE);
+    @GetMapping("count") // /admin/count
+    public PageCountDTO count(@RequestParam(required = false) String city) {
+        return PageCountDTO.of(locationService.count(city), PAGE_SIZE);
     }
 
-    @GetMapping("geo")
-    public List<LocationDTO> locations(@RequestParam(required = false, defaultValue = "0") int page) {
-        return locationService.getLocations(PageRequest.of(page, PAGE_SIZE, Sort.Direction.DESC, "id"));
+    @GetMapping("geo") // /admin/geo
+    public List<LocationDTO> locations(@RequestParam(required = false)String city,
+                                       @RequestParam(defaultValue = "0") int page) {
+        return locationService.getLocations(
+                city,
+                PageRequest.of(page, PAGE_SIZE, Sort.Direction.DESC, "id"));
     }
+
+//    тестовые IP
+
+    @GetMapping("/test")
+    public void testInsert() {
+        LocationDTO dto = new LocationDTO();
+        dto.setIp("8.8.8.8");
+        dto.setCity("Lviv");
+        dto.setRegion("Lvivska");
+        dto.setCountry("Ukraine");
+        locationService.save(dto);
+    }
+
+    @GetMapping("/test2")
+    public void testInsertTwo() {
+        LocationDTO dto = new LocationDTO();
+        dto.setIp("9.9.9.9");
+        dto.setCity("Wroclaw");
+        dto.setRegion("Dolnoslaskie");
+        dto.setCountry("Polska");
+        locationService.save(dto);
+    }
+
 }
